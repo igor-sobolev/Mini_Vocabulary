@@ -51,7 +51,21 @@ void MainWindow::printTranslation(QString s){
     if(s == "")return;
     QSqlQuery qry;
 
-    if (qry.exec("SELECT word, translation, note FROM words WHERE word LIKE \'%" + ui->lineEdit->text() +
+    if (qry.exec("SELECT word, translation, note FROM words WHERE word LIKE \'" + ui->lineEdit->text() +
+                 "%\'"))
+    {
+        while (qry.next()) {
+            QString word = qry.value(0).toString();
+            QString translation = qry.value(1).toString();
+            QString note = qry.value(2).toString();
+            ui->textEdit->textCursor().insertText(word+" - "+translation+"\n"+note+"\n\n");
+        }
+    }
+    else {
+        QMessageBox::critical(this, "Error","Wrong query");
+    }
+
+    if (qry.exec("SELECT word, translation, note FROM words WHERE word LIKE \'to " + ui->lineEdit->text() +
                  "%\'"))
     {
         while (qry.next()) {

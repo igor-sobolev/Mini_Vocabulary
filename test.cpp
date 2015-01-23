@@ -136,7 +136,8 @@ void Test::on_pushButtonAccept_clicked()
         }
         correct++;
         ui->labelCorrect->setText("<html><head/><body><p><span style=\" font-size:10pt; font-weight:600;\">Correct: "+QString("%1").arg(correct)+"/"+QString("%1").arg(count)+"</span></p></body></html>");
-        ui->lineEditTranslation->setStyleSheet("background : green;");
+        ui->lineEditTranslation->setStyleSheet("background : green; color : white;");
+        ui->lineEditTranslation->setReadOnly(true);
         current.done++;
         QSqlQuery updQuery;
         if(!updQuery.exec("UPDATE words SET test_done="+QString("%1").arg(current.done)+" WHERE word='"+current.word+"' AND translation='"+current.translation+"'"))
@@ -148,7 +149,9 @@ void Test::on_pushButtonAccept_clicked()
         if(sounds){
             QSound::play("sounds/Grumble.wav");
         }
-        ui->lineEditTranslation->setStyleSheet("background : red;");
+        ui->lineEditTranslation->setStyleSheet("background : red; color : white;");
+        ui->lineEditTranslation->setText(current.translation);
+        ui->lineEditTranslation->setReadOnly(true);
     }
     ui->pushButtonAccept->setEnabled(false);
 }
@@ -156,6 +159,7 @@ void Test::on_pushButtonAccept_clicked()
 void Test::on_pushButtonNext_clicked()
 {
     progress++;
+    ui->lineEditTranslation->setReadOnly(false);
     ui->labelProgress->setText("<html><head/><body><p><span style=\" font-size:10pt; font-weight:600;\">Progress: "+QString("%1").arg(progress)+"/"+QString("%1").arg(count)+"</span></p></body></html>");
     if(progress==count)ui->pushButtonNext->setEnabled(false);
     ui->pushButtonAccept->setEnabled(true);
